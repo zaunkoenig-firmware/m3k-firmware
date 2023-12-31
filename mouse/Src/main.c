@@ -165,7 +165,15 @@ static inline uint32_t mode_process(Config *cfg, int *skip,
 		if (lifted && btn == 0b011) {
 			ticks++;
 			if (ticks == timeout_ticks) {
-				anim_num((dpi + 1) * 50);
+				// show DPI
+				// 10k steps (50 * 200)
+				anim_updown((dpi + 1) / 200);
+				// 1k steps (50 * 20)
+				anim_rightleft(((dpi + 1) % 200) / 20);
+				// 100 steps (50 * 2)
+				anim_downup((((dpi + 1) % 200) % 20) / 2);
+				// 50 steps (50 * 1)
+				anim_leftright((((dpi + 1) % 200) % 20) % 2);
 			}
 			if (ticks == 2*timeout_ticks) {
 				anim_cw(1 + _FLD2VAL(CONFIG_LOD, *cfg));
@@ -190,7 +198,15 @@ static inline uint32_t mode_process(Config *cfg, int *skip,
 			ticks++;
 			if (ticks == timeout_ticks) {
 				if (mode == 1) {
-					anim_num((dpi + 1) * 50);
+					// show DPI
+					// 10k steps (50 * 200)
+					anim_updown((dpi + 1) / 200);
+					// 1k steps (50 * 20)
+					anim_rightleft(((dpi + 1) % 200) / 20);
+					// 100 steps (50 * 2)
+					anim_downup((((dpi + 1) % 200) % 20) / 2);
+					// 50 steps (50 * 1)
+					anim_leftright((((dpi + 1) % 200) % 20) % 2);
 				} else if (mode == 2) {
 					anim_cw(1 + _FLD2VAL(CONFIG_LOD, *cfg));
 					if (hs) {
