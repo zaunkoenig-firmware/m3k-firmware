@@ -153,8 +153,8 @@ static inline uint32_t mode_process(Config *cfg, int *skip,
 			paw3399_set_lod(new_lod);
 		}
 		if ((released & 0b10) != 0 && !lifted && hs) { // RMB released in HS mode
-			// loops 8k (0b00) -> 2k (0b10) -> 4k (0b01)
-			const int new_itv = (_FLD2VAL(CONFIG_INTERVAL, *cfg) + 2) % 3;
+			// loops 8k (0b00) -> 4k (0b01) -> 2k (0b10) -> 1k (0b11)
+			const int new_itv = (_FLD2VAL(CONFIG_INTERVAL, *cfg) + 1) % 4;
 			*cfg = (*cfg & (~CONFIG_INTERVAL_Msk)) | (new_itv << CONFIG_INTERVAL_Pos);
 			*skip = (1 << new_itv) - 1;
 			anim_num(1 << (3 - new_itv));
