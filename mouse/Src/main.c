@@ -153,8 +153,8 @@ static inline uint32_t mode_process(Config *cfg, int *skip,
 			paw3399_set_lod(new_lod);
 		}
 		if ((released & 0b10) != 0 && !lifted && hs) { // RMB released in HS mode
-			// loops 8k (0b00) -> 4k (0b01) -> 2k (0b10) -> 1k (0b11)
-			const int new_itv = (_FLD2VAL(CONFIG_INTERVAL, *cfg) + 1) % 4;
+			// loops 8k (0b00) -> 1k (0b11) -> 2k (0b10) -> 4k (0b01) -> 8k
+			const int new_itv = (_FLD2VAL(CONFIG_INTERVAL, *cfg) - 1) % 4;
 			*cfg = (*cfg & (~CONFIG_INTERVAL_Msk)) | (new_itv << CONFIG_INTERVAL_Pos);
 			*skip = (1 << new_itv) - 1;
 			anim_num(1 << (3 - new_itv));
@@ -167,13 +167,13 @@ static inline uint32_t mode_process(Config *cfg, int *skip,
 			if (ticks == timeout_ticks) {
 				// show DPI
 				// 10k steps (50 * 200)
-				anim_updown((dpi + 1) / 200);
-				// 1k steps (50 * 20)
-				anim_rightleft(((dpi + 1) % 200) / 20);
-				// 100 steps (50 * 2)
-				anim_downup((((dpi + 1) % 200) % 20) / 2);
-				// 50 steps (50 * 1)
-				anim_leftright((((dpi + 1) % 200) % 20) % 2);
+                anim_updown_pause((dpi + 1) / 200);
+                // 1k steps (50 * 20)
+                anim_rightleft_pause(((dpi + 1) % 200) / 20);
+                // 100 steps (50 * 2)
+                anim_downup_pause((((dpi + 1) % 200) % 20) / 2);
+                // 50 steps (50 * 1)
+                anim_leftright_pause((((dpi + 1) % 200) % 20) % 2);
 			}
 			if (ticks == 2*timeout_ticks) {
 				anim_cw(1 + _FLD2VAL(CONFIG_LOD, *cfg));
@@ -200,13 +200,13 @@ static inline uint32_t mode_process(Config *cfg, int *skip,
 				if (mode == 1) {
 					// show DPI
 					// 10k steps (50 * 200)
-					anim_updown((dpi + 1) / 200);
-					// 1k steps (50 * 20)
-					anim_rightleft(((dpi + 1) % 200) / 20);
-					// 100 steps (50 * 2)
-					anim_downup((((dpi + 1) % 200) % 20) / 2);
-					// 50 steps (50 * 1)
-					anim_leftright((((dpi + 1) % 200) % 20) % 2);
+                    anim_updown_pause((dpi + 1) / 200);
+                    // 1k steps (50 * 20)
+                    anim_rightleft_pause(((dpi + 1) % 200) / 20);
+                    // 100 steps (50 * 2)
+                    anim_downup_pause((((dpi + 1) % 200) % 20) / 2);
+                    // 50 steps (50 * 1)
+                    anim_leftright_pause((((dpi + 1) % 200) % 20) % 2);
 				} else if (mode == 2) {
 					anim_cw(1 + _FLD2VAL(CONFIG_LOD, *cfg));
 					if (hs) {
