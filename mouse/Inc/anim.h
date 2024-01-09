@@ -70,7 +70,7 @@ struct Xy anim_read(void);
 
 #define anim_cw(reps) anim_add((reps), 4, (struct Anim[]){UP_SLOW, RIGHT_SLOW, DOWN_SLOW, LEFT_SLOW})
 #define anim_ccw(reps) anim_add((reps), 4, (struct Anim[]){RIGHT_SLOW, UP_SLOW, LEFT_SLOW, DOWN_SLOW})
-#define anim_one(reps) anim_add((reps), 2, (struct Anim[]){DOWN_SLOW})
+#define anim_one(reps) anim_add((reps), 2, (struct Anim[]){DOWN_SLOW, DOWN_SLOW})
 #define anim_eight(reps) anim_add((reps), 8, (struct Anim[]){DOWN_SLOW, RIGHT_SLOW, DOWN_SLOW, LEFT_SLOW, UP_SLOW, RIGHT_SLOW, UP_SLOW, LEFT_SLOW})
 
 #define anim_lg_updown(reps) anim_add((reps), 2, (struct Anim[]){UP_L, DOWN_L})
