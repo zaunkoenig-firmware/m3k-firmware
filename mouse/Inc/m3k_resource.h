@@ -25,7 +25,7 @@
 
 #define M3K_USB_MFG "Zaunkoenig"
 #define M3K_USB_NAME "M3K"
-#define M3K_FW_VERSION " firmware v1.1"
+#define M3K_FW_VERSION " firmware v1.2"
 #define M3K_USB_PID 0xA462
 #define M3K_USB_VID 0x0483
 
