@@ -328,13 +328,17 @@ static void paw3399_init(const Config cfg)
 	spi_write(0x55, 0x00);
 	spi_write(0x7F, 0x00);
 	spi_write(0x40, 0x00);
-	spi_write(0x7f, 0x05); // anti-jitter configuration
-	spi_write(0x43, 0x64); // anti-jitter configuration
-	spi_write(0x7f, 0x00); // anti-jitter configuration
 	ss_high();
 
 	// equivalent of 7.3
 	paw3399_spi2();
+
+	// new placement for anti-jitter configuration
+	ss_low();
+	spi_write(0x7f, 0x05);
+	spi_write(0x43, 0x64);
+	spi_write(0x7f, 0x00);
+	ss_high();
 
 	// 6.1.7
 	ss_low();
