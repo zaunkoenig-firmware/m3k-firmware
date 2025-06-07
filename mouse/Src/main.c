@@ -36,6 +36,8 @@
 
 #define TIMEOUT_SECS 5 // seconds of holding buttons for programming mode
 
+int8_t encoder_LUT[4][4][4] = {0}; // LUT for encoder values
+
 typedef union {
 	struct __PACKED { // use the order in the report descriptor
 		uint8_t btn;
@@ -244,6 +246,13 @@ int main(void) {
 	int whl_count = 0; // microframe counter for limiting wheel code rate
 	Config cfg = config_boot();
 
+	// init encoder LUT
+	// initialised to all 0s
+	encoder_LUT[0][3][1] = 1;
+	encoder_LUT[0][3][2] = -1;
+	encoder_LUT[3][0][1] = -1;
+	encoder_LUT[3][0][2] = 1;
+
 	const int hs_usb = ((cfg & CONFIG_HS_USB) != 0);
 	anim_set_scale(hs_usb ? 8 : 1);
 	usb_init(hs_usb);
@@ -296,12 +305,8 @@ int main(void) {
 		if (whl_count == 0) {
 			const int whl_now = whl_read();
 			if (whl_now != whl_last) {
-				if (!((whl_now == 0 && whl_last == 3) || (whl_now == 3 && whl_last == 0))) {
-					if (whl_now == 0 && whl_lastlast == 3) {
-						new.whl = (whl_last == 1) ? -1 : (whl_last == 2) ? 1 : 0;
-					} else if (whl_now == 3 && whl_lastlast == 0) {
-						new.whl = (whl_last == 1) ? 1 : (whl_last == 2) ? -1 : 0;
-					}
+				new.whl = encoder_LUT[whl_lastlast][whl_now][whl_last];
+				if (new.whl != 0) {
 					whl_lastlast = whl_last;
 					whl_last = whl_now;
 				}
