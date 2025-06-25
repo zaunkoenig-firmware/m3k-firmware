@@ -260,6 +260,9 @@ int main(void) {
 	Usb_packet new = { 0 }; // what's new this loop
 	Usb_packet send = { 0 }; // what's transmitted
 
+	int buffer_x = 0;
+	int buffer_y = 0;
+
 	int skip = hs_usb ? (1 << _FLD2VAL(CONFIG_INTERVAL, cfg)) - 1 : 0;
 	int count = 0; // counter to skip reports
 
@@ -331,20 +334,32 @@ int main(void) {
 					1) | USB_OTG_GRSTCTL_TXFFLSH;
 			while ((USB_OTG_HS->GRSTCTL & USB_OTG_GRSTCTL_TXFFLSH) != 0)
 				;
-			count = 0; // reset counter, try to transmit again
-		} else if (count == skip) { // last loop transmitted successfully
+
+			if (count == skip) {
+				count = 0; // reset counter, try to transmit again
+			}
+		} else { // last loop transmitted successfully
 			send.whl = 0;
-			send.x = 0;
-			send.y = 0;
+
+			if (count == skip) {
+				send.x = 0;
+				send.y = 0;
+			}
 		}
 		send.whl += new.whl;
-		send.x += new.x;
-		send.y += new.y;
+		buffer_x += new.x;
+		buffer_y += new.y;
 
-		// skip transmission for "skip" loops after a successful transmission
 		if (count > 0) {
 			count--;
-			continue;
+		}
+
+		if (count == 0) {
+			send.x += buffer_x;
+			send.y += buffer_y;
+			buffer_x = 0;
+			buffer_y = 0;
+			count = skip;
 		}
 
 		// if there is data to transmitted
@@ -362,7 +377,6 @@ int main(void) {
 			// write to fifo
 			USBx_DFIFO(1) = send.u32[0] & mask;
 			USBx_DFIFO(1) = send.u32[1];
-			count = skip;
 		}
 	}
 	return 0;
